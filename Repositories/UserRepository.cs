@@ -1,7 +1,9 @@
 
 using CourseManagement.Data;
 using CourseManagement.Models;
+using CourseManagement.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace CourseManagement.Repositories;
 

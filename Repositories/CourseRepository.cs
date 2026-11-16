@@ -20,6 +20,7 @@ public class CourseRepository : ICourseRepository
     {
         await courseDbContext.Courses.AddAsync(course);
         await courseDbContext.SaveChangesAsync();
+        
         return course;
     }
 
@@ -29,7 +30,7 @@ public class CourseRepository : ICourseRepository
         {
             return await courseDbContext.Courses.AnyAsync(c => c.Title == title && c.Id != excludeCourseId);
         }
-        return await courseDbContext.Courses.AnyAsync(c => c.Title == title );
+        return await courseDbContext.Courses.AnyAsync(c => c.Title == title);
     }
 
     public async Task<bool> DeleteCourse(Course course)
@@ -41,12 +42,17 @@ public class CourseRepository : ICourseRepository
 
     public async Task<Course?> FindCourseById(Guid id)
     {
-        return await courseDbContext.Courses.FindAsync(id);
+        return await courseDbContext.Courses
+                                    .Include(u => u.Teacher)
+                                    .FirstOrDefaultAsync(c => c.Id == id);
     }
 
     public async Task<List<Course>> GetAllCourses()
     {
-        return await courseDbContext.Courses.ToListAsync();
+        return await courseDbContext.Courses
+                        // .FromSqlRaw("Call GetAllCourses()")
+                        .Include(u => u.Teacher)
+                        .ToListAsync();
     }
 
     public async Task<Course> UpdateCourse(Course course)

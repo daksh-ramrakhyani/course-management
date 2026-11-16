@@ -1,0 +1,4 @@
+DROP PROCEDURE IF EXISTS GetAllCourses;
+
+CREATE PROCEDURE GetAllCourses() 
+SELECT * FROM Courses;

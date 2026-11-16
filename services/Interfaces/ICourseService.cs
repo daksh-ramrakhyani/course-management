@@ -6,12 +6,12 @@ using CourseManagement.Common;
 
 public interface ICourseService
 {
-    Task<Result<List<Course>>> GetCourses();
-    Task<Result<Course?>> GetCourseById(Guid id);
+    Task<Result<List<CourseResponseDto>>> GetCourses();
+    Task<Result<CourseResponseDto?>> GetCourseById(Guid id);
 
-    Task<Result<Course>> CreateCourse(CreateCourseDto dto);
+    Task<Result<CourseResponseDto>> CreateCourse(CreateCourseDto dto, Guid TeacherId);
 
-    Task<Result<Course?>> UpdateCourse(Guid id, UpdateCourseDto dto);
+    Task<Result<CourseResponseDto?>> UpdateCourse(Guid id, UpdateCourseDto dto);
 
     Task<Result<bool>> DeleteCourse(Guid id);
 

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using CourseManagement.DTOs;
 using CourseManagement.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace CourseManagement.Controllers;
 
@@ -47,9 +49,14 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Teacher, Admin")]
     public async Task<ActionResult> CreateCourse(CreateCourseDto dto)
     {
-       var courseResult = await courseService.CreateCourse(dto);
+
+        string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        Guid teacherId = Guid.Parse(userId!);
+
+       var courseResult = await courseService.CreateCourse(dto, teacherId);
        if(courseResult.IsSuccess)
         {
             return CreatedAtAction(nameof(GetCourseById), new {id = courseResult.Data!.Id},  courseResult.Data);

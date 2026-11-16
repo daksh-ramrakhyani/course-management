@@ -38,6 +38,9 @@ namespace CourseManagement.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("char(36)");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("varchar(255)");
@@ -46,6 +49,8 @@ namespace CourseManagement.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TeacherId");
 
                     b.HasIndex("Title")
                         .IsUnique();
@@ -98,6 +103,22 @@ namespace CourseManagement.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.Course", b =>
+                {
+                    b.HasOne("CourseManagement.Models.User", "Teacher")
+                        .WithMany("Courses")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("CourseManagement.Models.User", b =>
+                {
+                    b.Navigation("Courses");
                 });
 #pragma warning restore 612, 618
         }

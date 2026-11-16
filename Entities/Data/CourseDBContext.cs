@@ -23,5 +23,12 @@ public class CourseDbContext : DbContext
         modelBuilder.Entity<User>()
             .HasIndex(u => u.EmailHash)
             .IsUnique();
+
+        modelBuilder.Entity<Course>()
+            .HasOne(c => c.Teacher)
+            .WithMany(u => u.Courses)
+            .HasForeignKey(c => c.TeacherId)
+            .OnDelete(DeleteBehavior.Restrict);
+            
     }
 }

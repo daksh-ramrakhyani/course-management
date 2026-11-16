@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseManagement.Models;
 
@@ -24,7 +25,11 @@ public class Course
 
     public DateTime CreatedAt { get; set; }
 
-
     public DateTime? UpdatedAt { get; set; }
+
+    [ForeignKey(nameof(Teacher))]
+    public Guid TeacherId {get; set;}
+
+    public User Teacher {get; set;}  = null!;
 
 }

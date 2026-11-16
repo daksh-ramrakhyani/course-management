@@ -1,6 +1,6 @@
 using CourseManagement.Models;
 
-namespace CourseManagement.Repositories;
+namespace CourseManagement.Repositories.Interfaces;
 
 public interface IUserRepository
 {

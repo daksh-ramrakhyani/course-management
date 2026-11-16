@@ -1,6 +1,7 @@
 using CourseManagement.Common;
 using CourseManagement.Models;
 using CourseManagement.Repositories;
+using CourseManagement.Repositories.Interfaces;
 using CourseManagement.Services.Interfaces;
 using CourseManagement.Utils;
 using System.ComponentModel.DataAnnotations;
@@ -136,7 +137,7 @@ public class UserService : IUserService
         tokens.User = MapUser(user);
 
         return Result<AuthTokensDto>.Success(
-            "Login sStudentuccessful.",
+            "Login Successfull.",
             tokens
         );
     }

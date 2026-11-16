@@ -36,4 +36,6 @@ public class User
     [Required]
     public DateTime UpdatedAt { get; set; }
 
+    public ICollection<Course> Courses { get; set; } = new List<Course>();
+
 }
