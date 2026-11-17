@@ -26,7 +26,7 @@ public class CoursesController : ControllerBase
     [HttpGet()]
 
     public async Task<IActionResult> GetCourses()
-    {
+    {  
         var courseResult = await courseService.GetCourses();
         return Ok(courseResult.Data);
     }
@@ -70,6 +70,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpPatch("{id}")]
+    [Authorize(Roles = "Teacher, Admin")]
     public async Task<ActionResult> UpdateCourse(Guid id,  UpdateCourseDto dto)
     {
         var courseResult = await courseService.UpdateCourse(id, dto);
@@ -91,6 +92,7 @@ public class CoursesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Teacher, Admin")]
     public async Task<ActionResult> DeleteCourse (Guid id)
     {
         var courseResult = await courseService.DeleteCourse(id);

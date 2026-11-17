@@ -99,6 +99,8 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 // HTTP pipeline
 if (app.Environment.IsDevelopment())
 {
