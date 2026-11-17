@@ -89,10 +89,7 @@ public class UserService : IUserService
             EmailIV = encryptedEmail.IV,
             EmailAuthTag = encryptedEmail.AuthTag,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-
-            // Never trust a role sent by the client
             Role = dto.Role,
-
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow
         };
