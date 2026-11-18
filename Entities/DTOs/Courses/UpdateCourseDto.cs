@@ -8,7 +8,7 @@ public class UpdateCourseDto
 
     public string? Description { get; set; }
 
-    [Range(1, int.MaxValue)]
+    [Range(1, 30)]
     public int? DurationInHours { get; set; }
 
     [Range(0, 10000)]

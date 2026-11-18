@@ -1,6 +1,5 @@
 using CourseManagement.Common;
 using CourseManagement.Models;
-using CourseManagement.Repositories;
 using CourseManagement.Repositories.Interfaces;
 using CourseManagement.Services.Interfaces;
 using CourseManagement.Utils;

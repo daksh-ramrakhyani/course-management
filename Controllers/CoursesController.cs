@@ -21,12 +21,11 @@ public class CoursesController : ControllerBase
         this.courseService = service;
     }
 
-
     // GET all courses 
     [HttpGet()]
 
     public async Task<IActionResult> GetCourses()
-    {  
+    {
         var courseResult = await courseService.GetCourses();
         return Ok(courseResult.Data);
     }
@@ -45,7 +44,7 @@ public class CoursesController : ControllerBase
             return Ok(courseResult.Data);
         }
         return NotFound(courseResult.Message);
-        
+
     }
 
     [HttpPost]
@@ -56,49 +55,65 @@ public class CoursesController : ControllerBase
         string? userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         Guid teacherId = Guid.Parse(userId!);
 
-       var courseResult = await courseService.CreateCourse(dto, teacherId);
-       if(courseResult.IsSuccess)
+        var courseResult = await courseService.CreateCourse(dto, teacherId);
+        if (courseResult.IsSuccess)
         {
-            return CreatedAtAction(nameof(GetCourseById), new {id = courseResult.Data!.Id},  courseResult.Data);
+            return CreatedAtAction(nameof(GetCourseById), new { id = courseResult.Data!.Id }, courseResult.Data);
         }
-        if(courseResult.ErrorCode == "DUPLICATE_TITLE")
+        if (courseResult.ErrorCode == "DUPLICATE_TITLE")
         {
             return Conflict(courseResult.Message);
         }
-        
+
         return BadRequest(courseResult.Message);
     }
 
     [HttpPatch("{id}")]
     [Authorize(Roles = "Teacher, Admin")]
-    public async Task<ActionResult> UpdateCourse(Guid id,  UpdateCourseDto dto)
+    public async Task<ActionResult> UpdateCourse(Guid id, UpdateCourseDto dto)
     {
-        var courseResult = await courseService.UpdateCourse(id, dto);
-        if(courseResult.IsSuccess)
+        var courseResult = await courseService.UpdateCourse(
+            id,
+            dto,
+            Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!),
+            User.FindFirstValue(ClaimTypes.Role)!
+            );
+
+
+        if (courseResult.IsSuccess)
         {
             return Ok(courseResult.Data);
         }
-                if(courseResult.ErrorCode == "DUPLICATE_TITLE")
+        if (courseResult.ErrorCode == "DUPLICATE_TITLE")
         {
             return Conflict(courseResult.Message);
         }
-        if(courseResult.ErrorCode == "VALIDATION_ERROR")
+        if (courseResult.ErrorCode == "VALIDATION_ERROR")
         {
             return BadRequest(courseResult.Message);
         }
 
-        return NotFound(courseResult.Message);
+        if (courseResult.ErrorCode == "NOT_AUTHORISED")
+        {
+            return StatusCode( 403 ,courseResult.Message);
+        }
 
+        return NotFound(courseResult.Message);
     }
 
     [HttpDelete("{id}")]
     [Authorize(Roles = "Teacher, Admin")]
-    public async Task<ActionResult> DeleteCourse (Guid id)
+    public async Task<ActionResult> DeleteCourse(Guid id)
     {
-        var courseResult = await courseService.DeleteCourse(id);
-        if(courseResult.IsSuccess)
+        var courseResult = await courseService.DeleteCourse(
+            id,
+            Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!),
+            User.FindFirstValue(ClaimTypes.Role)!
+        );
+
+        if (courseResult.IsSuccess)
         {
-           return NoContent();
+            return NoContent();
         }
         return NotFound(courseResult.Message);
     }

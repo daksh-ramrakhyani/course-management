@@ -11,8 +11,8 @@ public interface ICourseService
 
     Task<Result<CourseResponseDto>> CreateCourse(CreateCourseDto dto, Guid TeacherId);
 
-    Task<Result<CourseResponseDto?>> UpdateCourse(Guid id, UpdateCourseDto dto);
+    Task<Result<CourseResponseDto?>> UpdateCourse(Guid id, UpdateCourseDto dto, Guid authenticatedUser, string role);
 
-    Task<Result<bool>> DeleteCourse(Guid id);
+    Task<Result<bool>> DeleteCourse(Guid id, Guid authenticatedUser, string role);
 
 }

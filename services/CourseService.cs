@@ -6,8 +6,6 @@ using CourseManagement.Models;
 using CourseManagement.Services.Interfaces;
 using CourseManagement.Repositories.Interfaces;
 
-
-
 // using CourseManagement.Repositories;
 
 public class CourseService : ICourseService
@@ -97,12 +95,16 @@ public class CourseService : ICourseService
         return Result<CourseResponseDto>.Success("Course created successfully", MapCourse(courseCreated));
     }
 
-    public async Task<Result<bool>> DeleteCourse(Guid id)
+    public async Task<Result<bool>> DeleteCourse(Guid id, Guid authenticatedUser, string role)
     {
         Course? course = await courseRepository.FindCourseById(id);
         if (course == null)
         {
             return Result<bool>.Failure("Course not found", "COURSE_NOT_FOUND");
+        }
+        if (course.TeacherId != authenticatedUser && role != "admin")
+        {
+            return Result<bool>.Failure("Not Authorised", "NOT_AUTHORISED");
         }
         await courseRepository.DeleteCourse(course);
         return Result<bool>.Success("Course deleted successfully", true);
@@ -127,13 +129,17 @@ public class CourseService : ICourseService
         return Result<List<CourseResponseDto>>.Success("Courses found successfully", courseList);
     }
 
-    public async Task<Result<CourseResponseDto?>> UpdateCourse(Guid id, UpdateCourseDto dto)
+    public async Task<Result<CourseResponseDto?>> UpdateCourse(Guid id, UpdateCourseDto dto, Guid authenticatedUser, string role)
     {
         // checking if course exist
         Course? course = await courseRepository.FindCourseById(id);
         if (course == null)
         {
             return Result<CourseResponseDto?>.Failure("Course not found", "COURSE_NOT_FOUND");
+        }
+        if (course.TeacherId != authenticatedUser && role != "admin")
+        {
+            return Result<CourseResponseDto?>.Failure("Not Authorised", "NOT_AUTHORISED");
         }
 
         bool isUpdated = false;
